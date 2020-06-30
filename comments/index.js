@@ -21,13 +21,23 @@ app.post("/posts/:id/comments", async (req, res, next) => {
     ? [...commentsByPostId[req.params.id], { commentId, content }]
     : [{ commentId, content }];
 
-  // POST TO EVENT BUS
-  await axios.post("http://localhost:4005/event", {
-    type: "CommentCreated",
-    data: { id: commentId, content, postId: req.params.id },
-  });
+  try {
+    // POST TO EVENT BUS
+    await axios.post("http://localhost:4005/events", {
+      type: "CommentCreated",
+      data: { id: commentId, content, postId: req.params.id },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   res.status(201).send(commentsByPostId[req.params.id]);
+});
+
+// HANDLE EVENTS
+app.post("/events", (req, res, next) => {
+  console.log("Received event", req.body.type);
+  res.send({});
 });
 
 app.listen(4001, console.log("Comments service running on port 4001"));
