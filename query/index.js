@@ -11,6 +11,7 @@ app.get("/posts", (req, res, next) => {
   res.send(posts);
 });
 
+// EVENT LISTENER
 app.post("/events", (req, res, next) => {
   const { type, data } = req.body;
 
@@ -22,13 +23,20 @@ app.post("/events", (req, res, next) => {
 
   // LISTEN TO COMMENT CREATED EVENT
   if (type === "CommentCreated") {
-    const { id, content, postId } = data;
+    const { id, content, postId, status } = data;
     const post = posts[postId];
-    post.comments.push({ id, content });
+    post.comments.push({ id, content, status });
+  }
+
+  // LISTEN TO COMMENT UPDATED
+  if (type === "CommentUpdated") {
+    const { id, postId, content, status } = data;
+    const comment = posts[postId].comments.find((comment) => comment.id === id);
+    comment.status = status;
+    comment.content = content;
   }
 
   console.log(posts);
-
   res.send({});
 });
 

@@ -8,11 +8,12 @@ app.post("/events", async (req, res, next) => {
   const event = req.body;
 
   try {
-    await axios.post("http://localhost:4000/events", event);
-    await axios.post("http://localhost:4001/events", event);
-    await axios.post("http://localhost:4002/events", event);
+    await axios.post("http://localhost:4000/events", event); // POST
+    await axios.post("http://localhost:4001/events", event); // COMMENT
+    await axios.post("http://localhost:4002/events", event); // QUERY
+    await axios.post("http://localhost:4003/events", event); // MODERATION
   } catch (error) {
-    console.error(error);
+    console.log(error.respnse);
   }
 
   res.send({ status: "OK" });
