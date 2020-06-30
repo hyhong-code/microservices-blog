@@ -5,7 +5,10 @@ const app = express();
 app.use(express.json());
 
 app.post("/events", async (req, res, next) => {
+  console.log("run");
+
   const { type, data } = req.body;
+  console.log(type);
   if (type === "CommentCreated") {
     const status = data.content.includes("orange") ? "rejected" : "approved";
 
@@ -23,6 +26,7 @@ app.post("/events", async (req, res, next) => {
     } catch (error) {
       console.error(error.respnse);
     }
+    console.log(status);
   }
 
   res.send({});

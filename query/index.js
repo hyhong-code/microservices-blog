@@ -1,4 +1,5 @@
 const express = require("express");
+const axios = require("axios");
 const cors = require("cors");
 
 const app = express();
@@ -7,14 +8,7 @@ app.use(cors());
 
 const posts = {};
 
-app.get("/posts", (req, res, next) => {
-  res.send(posts);
-});
-
-// EVENT LISTENER
-app.post("/events", (req, res, next) => {
-  const { type, data } = req.body;
-
+const handleEvent = (type, data) => {
   // LISTEN TO POST CREATED EVENT
   if (type === "PostCreated") {
     const { id, title } = data;
@@ -35,9 +29,29 @@ app.post("/events", (req, res, next) => {
     comment.status = status;
     comment.content = content;
   }
+};
 
-  console.log(posts);
+app.get("/posts", (req, res, next) => {
+  res.send(posts);
+});
+
+// EVENT LISTENER
+app.post("/events", (req, res, next) => {
+  const { type, data } = req.body;
+  console.log("Received event", type);
+  handleEvent(type, data);
   res.send({});
 });
 
-app.listen(4002, console.log(`Query service listening on port 4002`));
+app.listen(4002, async () => {
+  console.log(`Query service listening on port 4002`);
+
+  // SYNC EVENTS
+  const res = await axios.get("http://localhost:4005/events");
+
+  res.data.forEach((event) => {
+    const { type, data } = event;
+    console.log("Processing event:", type);
+    handleEvent(type, data);
+  });
+});
