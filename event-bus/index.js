@@ -11,10 +11,10 @@ app.post("/events", (req, res, next) => {
 
   events.push(event);
 
-  axios.post("http://localhost:4000/events", event); // POST
-  axios.post("http://localhost:4001/events", event); // COMMENT
-  axios.post("http://localhost:4002/events", event); // QUERY
-  axios.post("http://localhost:4003/events", event); // MODERATION
+  axios.post("http://posts-clusterip-srv:4000/events", event); // POST
+  axios.post("http://comments-srv:4001/events", event); // COMMENT
+  axios.post("http://query-srv:4002/events", event); // QUERY
+  axios.post("http://moderation-srv:4003/events", event); // MODERATION
 
   res.send({ status: "OK" });
 });

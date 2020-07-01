@@ -21,7 +21,7 @@ app.post("/posts", async (req, res) => {
 
   try {
     // POST TO EVENT BUS
-    await axios.post("http://localhost:4005/events", {
+    await axios.post("http://event-bus-srv:4005/events", {
       type: "PostCreated",
       data: { id, title },
     });
@@ -38,4 +38,7 @@ app.post("/events", (req, res, next) => {
   res.send({});
 });
 
-app.listen(4000, console.log("Posts service listening on port 4000..."));
+app.listen(4000, () => {
+  console.log("v55");
+  console.log("Posts service listening on port 4000...");
+});
